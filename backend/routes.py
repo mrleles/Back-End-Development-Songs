@@ -59,3 +59,8 @@ def health():
 def count():
     count = len(songs_list)
     return {"count":count}, 200
+
+@app.route("/song")
+def songs():
+    songs = db.songs.find({})
+    return {"songs":json_util.dumps(list(songs))}, 200
