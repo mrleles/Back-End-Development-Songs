@@ -71,3 +71,13 @@ def get_song_by_id(id):
     if not song:
         return {"message":f"song with id {id} not found"}, 404
     return parse_json(song), 200
+
+@app.route("/song", methods=["POST"])
+def create_song():
+    song = request.json
+    if song:
+        song_db = db.songs.find_one({"id": song["id"]})
+        if song_db:
+            return {"message":f"song with id {song['id']} already present"}, 302
+        insertedid = db.songs.insert_one(song)
+        return {"inserted id":{"$oid":f"{insertedid}"}}
