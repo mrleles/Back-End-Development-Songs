@@ -81,3 +81,15 @@ def create_song():
             return {"message":f"song with id {song['id']} already present"}, 302
         insertedid = db.songs.insert_one(song)
         return {"inserted id":{"$oid":f"{insertedid}"}}
+
+@app.route("/song/<int:id>", methods=["PUT"])
+def update_song(id):
+    song = request.json
+    song_db = db.songs.find_one({"id": id})
+    if not song_db:
+        return {"message":"song not found"}, 404
+    update_song = {"$set":song}
+    result = db.songs.update_one({"id":id},update_song)
+    if result.modified_count == 0:
+        return {"message":"song found, but nothing updated"}, 200
+    return song, 201
