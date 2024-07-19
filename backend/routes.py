@@ -93,3 +93,10 @@ def update_song(id):
     if result.modified_count == 0:
         return {"message":"song found, but nothing updated"}, 200
     return song, 201
+
+@app.route("/song/<int:id>", methods=["DELETE"])
+def delete_song(id):
+    result = db.songs.delete_one({"id":id})
+    if result.deleted_count == 0:
+        return {"message":"song not found"}
+    return {}, 204
